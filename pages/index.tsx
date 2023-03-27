@@ -2,6 +2,9 @@ import Head from "next/head";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import Audio from "../components/Audio";
+import Chat from "../components/Chat";
+
+import { Message } from "../components/Chat";
 
 import { useState } from "react";
 
@@ -13,6 +16,7 @@ export default function Home() {
         "Assistant, pretend you are a fortune teller Kirby. Stay in character. Be kind and give the user lots of great fortunes as Kirby. Also, say the term poyo a lot because it's cute. Respond with very very short messages. A few notes: You will be given text that was recorded and speech-to-text, and your output will be given back as text to speech. Please do not use emojis, because your responses will be read out loud. Be fun and as creative as possible. Be aware that since the audio transcription is a bit fuzzy, sometimes you might get messages that seem confusing or are missing words. In those cases, make reasonable assumptions about what the user meant",
     },
   ]);
+  const [innerTranscript, setInnerTranscript] = useState("");
 
   async function fetchChatGptResponse(userInput: any) {
     const apiUrl = "/api/chatgpt";
@@ -56,7 +60,20 @@ export default function Home() {
     return chatGptResponse;
   }
 
-  console.log(conversationHistory);
+  const messages: Message[] = conversationHistory
+    .filter((conversationHistory) => {
+      return conversationHistory.role !== "system";
+    })
+    .map((conversationHistoryItem) => {
+      return {
+        id: conversationHistory.indexOf(conversationHistoryItem),
+        user: conversationHistoryItem.role === "user" ? "me" : "them",
+        text: conversationHistoryItem.content,
+      };
+    });
+  const addMessage = (message: string) => {
+    fetchChatGptResponse(message);
+  };
 
   return (
     <>
@@ -91,8 +108,17 @@ export default function Home() {
             <motion.p className="mt-2 text-2xl" layout>
               Ask me anything and I will tell you your fortune.
             </motion.p>
-            <Audio fetchChatGptResponse={fetchChatGptResponse} />
+            <Audio
+              fetchChatGptResponse={fetchChatGptResponse}
+              setInnerTranscript={setInnerTranscript}
+            />
+            <Chat
+              messages={messages}
+              addMessage={addMessage}
+              inputOverlay={innerTranscript}
+            />
 
+            {}
             {/* // Small Text */}
             <div className="mt-3 text-sm">
               <p>
