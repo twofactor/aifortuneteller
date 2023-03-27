@@ -1,8 +1,6 @@
 // pages/api/chatgpt.js
 
-import { NextApiRequest, NextApiResponse } from "next";
-
-const apiKey = ""; // Replace with your actual API key
+const apiKey = process.env.OPENAI_KEY;
 const apiUrl = "https://api.openai.com/v1/chat/completions";
 
 async function handler(req, res) {

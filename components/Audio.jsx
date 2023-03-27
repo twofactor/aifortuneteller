@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import MicrophoneButton from "./MicrophoneButton";
+
 const Audio = ({ fetchChatGptResponse }) => {
   const recognition = useRef(null);
 
@@ -45,6 +47,7 @@ const Audio = ({ fetchChatGptResponse }) => {
           document.getElementById("output").innerHTML = text;
           fetchChatGptResponse(text)
             .then((response) => {
+              console.log("yeah we got it", response);
               speak(response);
             })
             .catch((error) =>
@@ -63,12 +66,14 @@ const Audio = ({ fetchChatGptResponse }) => {
 
     function speak(text) {
       const utterance = new SpeechSynthesisUtterance(text);
-      const selectedVoice = getVoice("en-GB", "Google UK English Male");
-      utterance.voice = selectedVoice;
+      // const selectedVoice = getVoice("en-GB", "Google UK English Male");
+      // utterance.voice = selectedVoice;
       utterance.onend = function () {
-        recognition.current.start();
-        setIsRecording(true);
+        // recognition.current.start();
+        // setIsRecording(true);
+        console.log("speaking ended");
       };
+      console.log("speaking", text);
       synth.speak(utterance);
     }
 
@@ -95,27 +100,19 @@ const Audio = ({ fetchChatGptResponse }) => {
     };
   }, []);
 
-  const handleStartClick = () => {
-    if (recognition.current) {
-      recognition.current.start();
-    }
-  };
-
-  const handleStopClick = () => {
-    if (recognition.current) {
-      recognition.current.stop();
-    }
-  };
-
   return (
     <div className="container mx-auto px-4">
-      <div className="mb-4">
-        <button
+      <div className="mb-4 flex align-middle justify-center py-2">
+        {/* <button
           onClick={handleToggleRecording}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
         >
           {isRecording ? "Stop" : "Start"}
-        </button>
+        </button> */}
+        <MicrophoneButton
+          onClick={handleToggleRecording}
+          recording={isRecording}
+        />
       </div>
       <div className="bg-white border p-4 rounded">
         <span id="output" className="text-lg"></span>
