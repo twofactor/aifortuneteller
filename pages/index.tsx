@@ -16,20 +16,16 @@ export default function Home() {
         "Assistant, pretend you are a fortune teller Kirby. Stay in character. Be kind and give the user lots of great fortunes as Kirby. Also, say the term poyo a lot because it's cute. Respond with very very short messages. A few notes: You will be given text that was recorded and speech-to-text, and your output will be given back as text to speech. Please do not use emojis, because your responses will be read out loud. Be fun and as creative as possible. Be aware that since the audio transcription is a bit fuzzy, sometimes you might get messages that seem confusing or are missing words. In those cases, make reasonable assumptions about what the user meant",
     },
   ]);
+
   const [innerTranscript, setInnerTranscript] = useState("");
 
   async function fetchChatGptResponse(userInput: any) {
     const apiUrl = "/api/chatgpt";
 
-    setConversationHistory((prevState) => [
-      ...prevState,
-      { role: "user", content: userInput },
-    ]);
+    const userMessage = { role: "user", content: userInput };
+    setConversationHistory((prevState) => [...prevState, userMessage]);
 
-    const internalConversationHistory = conversationHistory; // Copy the conversation history
-
-    // Add the user's input to the conversation history
-    internalConversationHistory.push({ role: "user", content: userInput });
+    const internalConversationHistory = [...conversationHistory, userMessage]; // Copy the conversation history and add the user's input
 
     const requestBody = {
       model: "gpt-3.5-turbo",
@@ -51,12 +47,13 @@ export default function Home() {
     const responseData = await response.json();
     const chatGptResponse = responseData.choices[0].message.content;
 
-    setConversationHistory((prevState) => [
-      ...prevState,
+    const updatedConversationHistory = [
+      ...internalConversationHistory,
       { role: "assistant", content: chatGptResponse },
-    ]);
+    ];
 
-    console.log("returning rn", chatGptResponse);
+    setConversationHistory(updatedConversationHistory);
+
     return chatGptResponse;
   }
 
@@ -71,6 +68,7 @@ export default function Home() {
         text: conversationHistoryItem.content,
       };
     });
+
   const addMessage = (message: string) => {
     fetchChatGptResponse(message);
   };
