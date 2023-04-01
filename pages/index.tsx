@@ -1,132 +1,52 @@
 import Head from "next/head";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
-import Audio from "../components/Audio";
-import Chat from "../components/Chat";
 
-import { Message } from "../components/Chat";
+import { Flex, Box, Text } from "@chakra-ui/react";
+import PrimaryCard from "../components/@UI/PrimaryCard";
+import SecondaryCard from "../components/@UI/SecondaryCard";
 
-import { useState } from "react";
+import FortuneTeller from "../components/FortuneTeller";
 
 export default function Home() {
-  const [conversationHistory, setConversationHistory] = useState([
-    {
-      role: "system",
-      content:
-        "Assistant, pretend you are a fortune teller Kirby. Stay in character. Be kind and give the user lots of great fortunes as Kirby. Also, say the term poyo a lot because it's cute. Respond with very very short messages. A few notes: You will be given text that was recorded and speech-to-text, and your output will be given back as text to speech. Please do not use emojis, because your responses will be read out loud. Be fun and as creative as possible. Be aware that since the audio transcription is a bit fuzzy, sometimes you might get messages that seem confusing or are missing words. In those cases, make reasonable assumptions about what the user meant",
-    },
-  ]);
-
-  const [innerTranscript, setInnerTranscript] = useState("");
-
-  async function fetchChatGptResponse(userInput: any) {
-    const apiUrl = "/api/chatgpt";
-
-    const userMessage = { role: "user", content: userInput };
-    setConversationHistory((prevState) => [...prevState, userMessage]);
-
-    const internalConversationHistory = [...conversationHistory, userMessage]; // Copy the conversation history and add the user's input
-
-    const requestBody = {
-      model: "gpt-3.5-turbo",
-      messages: internalConversationHistory,
-    };
-
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
-    }
-
-    const responseData = await response.json();
-    const chatGptResponse = responseData.choices[0].message.content;
-
-    const updatedConversationHistory = [
-      ...internalConversationHistory,
-      { role: "assistant", content: chatGptResponse },
-    ];
-
-    setConversationHistory(updatedConversationHistory);
-
-    return chatGptResponse;
-  }
-
-  const messages: Message[] = conversationHistory
-    .filter((conversationHistory) => {
-      return conversationHistory.role !== "system";
-    })
-    .map((conversationHistoryItem) => {
-      return {
-        id: conversationHistory.indexOf(conversationHistoryItem),
-        user: conversationHistoryItem.role === "user" ? "me" : "them",
-        text: conversationHistoryItem.content,
-      };
-    });
-
-  const addMessage = (message: string) => {
-    fetchChatGptResponse(message);
-  };
-
   return (
-    <>
+    <div>
       <Head>
-        <title>Fortune Teller AI</title>
-        <meta name="description" content="Fortune Teller AI" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Home</title>
       </Head>
-      {/* // tailwind  */}
-      <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <AnimatePresence>
-          <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-            <motion.div
-              layout
-              transition={{
-                opacity: { duration: 0.2 },
-                layout: {
-                  type: "spring",
-                  bounce: 0.4,
-                  duration: 1,
-                },
-              }}
+      <Flex backgroundColor="black" minHeight="100vh">
+        <Flex
+          maxWidth="320px"
+          flexDirection="column"
+          gap="8px"
+          margin="auto"
+          marginTop={["8px", "16px", "32px", "32px"]}
+        >
+          <PrimaryCard padding="12px" width="100%">
+            <Text
+              color={"#FFC266"}
+              textShadow="0px 0px 3px rgba(255, 167, 36, 0.5)"
+              fontSize="3xl"
             >
+              AI Fortune Teller
+            </Text>
+          </PrimaryCard>
+          <SecondaryCard
+            flexDirection="column"
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Text fontSize="xl">
               <Image
-                src="/kirbyfortune.png"
-                alt="Fortune Teller"
-                width={256}
-                height={256}
+                src="/kirbyfortune-export.png"
+                width="128"
+                height="128"
+                alt="Pixel art of Kirby as a fortune teller"
               />
-            </motion.div>
-            <motion.p className="mt-2 text-2xl" layout>
-              Ask me anything and I will tell you your fortune.
-            </motion.p>
-            <Audio
-              fetchChatGptResponse={fetchChatGptResponse}
-              setInnerTranscript={setInnerTranscript}
-            />
-            <Chat
-              messages={messages}
-              addMessage={addMessage}
-              inputOverlay={innerTranscript}
-            />
-
-            {}
-            {/* // Small Text */}
-            <div className="mt-3 text-sm">
-              <p>
-                Audio may not work on all browsers. Google Chrome is
-                recommended.
-              </p>
-            </div>
-          </main>
-        </AnimatePresence>
-      </div>
-    </>
+            </Text>
+          </SecondaryCard>
+          <FortuneTeller />
+        </Flex>
+      </Flex>
+    </div>
   );
 }
