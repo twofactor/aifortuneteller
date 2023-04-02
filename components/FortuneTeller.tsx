@@ -45,6 +45,9 @@ const seed: Message[] = [
 const FortuneTeller = () => {
   const [messages, setMessages] = useState<Message[]>(seed);
 
+  const [playButton] = useSound("/button.m4a");
+  const [playButton5] = useSound("/button5.m4a");
+
   async function fetchChatGptResponse(userInput: string) {
     const apiUrl = "/api/chatgpt";
 
@@ -113,6 +116,12 @@ const FortuneTeller = () => {
             boxShadow: "0px 1px 6px rgba(255, 165, 0, 0.1)",
             backdropFilter: "blur(6px)",
           }}
+          onClick={() => {
+            playButton();
+          }}
+          // onMouseEnter={() => {
+          //   playButton5();
+          // }}
         >
           <Text
             color={"#FFC266"}
@@ -134,6 +143,12 @@ const FortuneTeller = () => {
             boxShadow: "0px 1px 6px rgba(255, 165, 0, 0.1)",
             backdropFilter: "blur(6px)",
           }}
+          onClick={() => {
+            playButton();
+          }}
+          // onMouseEnter={() => {
+          //   playButton5();
+          // }}
         >
           <Text
             color={"#FFC266"}

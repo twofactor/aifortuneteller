@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { Be_Vietnam_Pro } from "next/font/google";
 import { Space_Mono } from "next/font/google";
+import useSound from "use-sound";
 
 const spacemono = Space_Mono({
   weight: "400",
@@ -39,6 +40,10 @@ export default function Chat({
   const [inputValue, setInputValue] = useState("");
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const hiddenMessageRef = useRef<HTMLDivElement>(null);
+  const [playButton] = useSound("/button.m4a");
+  const [playButton5] = useSound("/button5.m4a");
+  const [playExpand] = useSound("/expand.m4a");
+  const [playCollapse] = useSound("/collapse.m4a");
 
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -80,8 +85,16 @@ export default function Chat({
     if (inputValue !== "" && messages[messages.length - 1].role !== "user") {
       setInputValue("");
       addMessage(newMessage);
+      playButton();
+      playExpand();
     }
   }
+
+  useEffect(() => {
+    if (messages[messages.length - 1].role === "assistant") {
+      playCollapse();
+    }
+  }, [messages]);
 
   function addMessageThem() {
     let newId = messages.length
@@ -262,6 +275,9 @@ export default function Chat({
               _placeholder={{
                 color: "rgba(255, 194, 102, 0.4)",
               }}
+              // onMouseEnter={() => {
+              //   playButton5();
+              // }}
             />
             <Button
               onClick={sendMessage}
@@ -292,6 +308,9 @@ export default function Chat({
                 border: "0.5px solid rgba(255, 210, 0, 0.1)",
                 boxShadow: "0px 1px 6px rgba(255, 165, 0, 0.1)",
               }}
+              // onMouseEnter={() => {
+              //   playButton5();
+              // }}
             >
               Send
             </Button>

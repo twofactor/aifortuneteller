@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import useSound from "use-sound";
 
 import MicrophoneButton from "./MicrophoneButton";
 
 const Audio = ({ fetchChatGptResponse }) => {
+  const [playButton] = useSound("/button.m4a");
+  const [playButton2] = useSound("/button2.m4a");
+
   const recognition = useRef(null);
 
   const [isRecording, setIsRecording] = useState(false);
@@ -13,9 +17,11 @@ const Audio = ({ fetchChatGptResponse }) => {
     if (isRecording) {
       recognition.current.stop();
       setIsRecording(false);
+      playButton2();
     } else {
       recognition.current.start();
       setIsRecording(true);
+      playButton();
     }
   };
 
@@ -43,6 +49,7 @@ const Audio = ({ fetchChatGptResponse }) => {
         if (event.results[i].isFinal) {
           const text = event.results[i][0].transcript;
           recognition.current.stop();
+          playButton2();
           setIsRecording(false);
           // document.getElementById("output").innerHTML = text;
           fetchChatGptResponse(text)
