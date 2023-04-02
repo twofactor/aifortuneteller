@@ -26,6 +26,10 @@ export default function Home() {
         boxSizing="border-box"
         padding="8px"
         className={spacemono.className}
+        backgroundImage="/background.jpg"
+        backgroundRepeat={"no-repeat"}
+        backgroundSize={"cover"}
+        backgroundPosition={"center"}
       >
         <Flex
           width={["100vw", "100vw", "360px", "360px"]}
