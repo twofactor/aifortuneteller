@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Input,
+  Textarea,
   ListItem,
   UnorderedList,
   useColorModeValue,
@@ -110,11 +111,11 @@ export default function Chat({
     addMessage(newMessage);
   }
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setInputValue(e.target.value);
   }
 
-  function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+  function handleKeyPress(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && inputValue) {
       sendMessage();
     }
@@ -246,15 +247,16 @@ export default function Chat({
             width="100%"
             boxSizing="border-box"
           >
-            <Input
-              type="text"
+            <Textarea
               value={inputValue}
+              resize={"vertical"}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
               className={spacemono.className}
               placeholder="Say something..."
               flexGrow={1}
-              padding="12px 14px"
+              minHeight={"64px"}
+              padding="8px 64px 8px 14px"
               backgroundColor="rgba(0, 0, 0, 0.2)"
               border="0.5px solid rgba(255, 194, 102, 0.2)"
               boxShadow="0px 1px 6px rgba(255, 165, 0, 0.12)"
