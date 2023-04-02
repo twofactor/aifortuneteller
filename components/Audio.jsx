@@ -101,23 +101,22 @@ const Audio = ({ fetchChatGptResponse }) => {
   }, []);
 
   return (
-    <div className="container mx-auto px-4">
-      <div className="mb-4 flex align-middle justify-center py-2">
-        {/* <button
+    <>
+      {/* <button
           onClick={handleToggleRecording}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
         >
           {isRecording ? "Stop" : "Start"}
         </button> */}
-        <MicrophoneButton
-          onClick={handleToggleRecording}
-          recording={isRecording}
-        />
-      </div>
+      <MicrophoneButton
+        onClick={handleToggleRecording}
+        recording={isRecording}
+      />
+
       {/* <div className="bg-white border p-4 rounded">
         <span id="output" className="text-lg"></span>
       </div> */}
-    </div>
+    </>
   );
 };
 

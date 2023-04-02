@@ -29,13 +29,13 @@ interface Message {
 
 const seed: Message[] = [
   {
-    id: 1,
+    id: 0,
     role: "system",
     content:
       "you are a fortune telling kirby. answer questions with your powers, and don't forget to say 'poyo'! be concise as possible, and don't use full sentences or fluff. and use only lowercase!! be fun!!! and happi",
   },
   {
-    id: 2,
+    id: 1,
     role: "assistant",
     content: "poyo! what do you want to know?",
   },
@@ -44,58 +44,56 @@ const seed: Message[] = [
 const FortuneTeller = () => {
   const [messages, setMessages] = useState<Message[]>(seed);
 
-  const fetchChatGptResponse = useCallback(
-    async (currentMessages: Message[]) => {
-      const apiUrl = "/api/chatgpt";
+  async function fetchChatGptResponse(userInput: string) {
+    const apiUrl = "/api/chatgpt";
 
-      try {
-        const requestBody = {
-          model: "gpt-3.5-turbo",
-          messages: currentMessages.map((message) => {
-            return { role: message.role, content: message.content };
-          }),
-        };
+    const userMessage: Message = {
+      id: messages.length,
+      role: "user",
+      content: userInput,
+    };
 
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
+    const internalMessages = [...messages, userMessage]; // Copy the conversation history and add the user's input
+    setMessages((prevState) => [...prevState, userMessage]);
 
-        if (!response.ok) {
-          throw new Error(`API request failed: ${response.status}`);
-        }
+    const requestBody = {
+      model: "gpt-3.5-turbo",
+      messages: internalMessages.map((message) => {
+        return { role: message.role, content: message.content };
+      }),
+    };
 
-        const responseData = await response.json();
-        const chatGptResponse = responseData.choices[0].message.content;
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
 
-        return chatGptResponse;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    []
-  );
-
-  useEffect(() => {
-    if (messages.length > 0 && messages[messages.length - 1].role === "user") {
-      const getGptResponse = async () => {
-        const response = await fetchChatGptResponse(messages);
-        if (response) {
-          setMessages([
-            ...messages,
-            { id: Date.now(), role: "assistant", content: response },
-          ]);
-        }
-      };
-      getGptResponse();
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
     }
-  }, [messages, fetchChatGptResponse]);
 
-  const addMessage = async (newMessage: Message) => {
-    setMessages([...messages, newMessage]);
+    const responseData = await response.json();
+    const chatGptResponse = responseData.choices[0].message.content;
+
+    const updatedMessages: Message[] = [
+      ...internalMessages,
+      {
+        id: internalMessages.length,
+        role: "assistant",
+        content: chatGptResponse,
+      },
+    ];
+
+    setMessages(updatedMessages);
+
+    return chatGptResponse;
+  }
+
+  const addMessage = (message: Message) => {
+    fetchChatGptResponse(message.content);
   };
 
   return (
@@ -155,19 +153,18 @@ const FortuneTeller = () => {
           flexDirection={"column"}
           alignItems="center"
           justifyContent="center"
+          minHeight="300px"
         >
-          <Button
-            backgroundColor="rgba(255, 167, 36, 0.1)"
-            border="0.5px solid rgba(255, 210, 0, 0.1)"
-            boxShadow="0px 1px 6px rgba(255, 165, 0, 0.1)"
-            backdropFilter="blur(6px)"
+          <Audio fetchChatGptResponse={fetchChatGptResponse} />
+          <Text
+            fontSize="xs"
             color={"#FFC266"}
             textShadow="0px 0px 3px rgba(255, 167, 36, 0.5)"
-            borderRadius={0}
+            mt="32px"
           >
-            Speak
-          </Button>
-          <Audio fetchChatGptResponse={fetchChatGptResponse} />
+            Audio is a bit buggy and may not work on all browsers. Chrome on web
+            is recommended.
+          </Text>
         </TabPanel>
         <TabPanel maxHeight={"100%"}>
           <Chat messages={messages} addMessage={addMessage} />

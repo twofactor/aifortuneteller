@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 // import { MicrophoneIcon, XIcon } from "@heroicons/react/24/solid";
+import {
+  Box,
+  Button,
+  Input,
+  ListItem,
+  UnorderedList,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 const MicrophoneButton = ({ onClick, recording }) => {
   const variants = {
     hover: { scale: 1.1 },
     pressed: { scale: 0.95 },
-    recording: { scale: [1, 1.1, 1] },
+    recording: { scale: [1, 1.05, 1] },
     notRecording: { scale: 1 },
   };
 
@@ -17,7 +25,6 @@ const MicrophoneButton = ({ onClick, recording }) => {
 
   return (
     <motion.div
-      className="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-12 h-12 cursor-pointer"
       initial="notRecording"
       animate={recording ? "recording" : "notRecording"}
       whileHover={recording ? undefined : "hover"}
@@ -26,37 +33,26 @@ const MicrophoneButton = ({ onClick, recording }) => {
       variants={variants}
       transition={recording ? pulseTransition : {}}
     >
-      {recording ? (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"
-          />
-        </svg>
-      )}
+      <Button
+        cursor="pointer"
+        backgroundColor="rgba(255, 167, 36, 0.15)"
+        border="0.5px solid rgba(255, 210, 0, 0.1)"
+        boxShadow="0px 1px 6px rgba(255, 165, 0, 0.1)"
+        backdropFilter="blur(6px)"
+        borderRadius={0}
+        paddingLeft="6"
+        paddingRight="6"
+        color={"#FFC266"}
+        textShadow="0px 0px 3px rgba(255, 167, 36, 0.5)"
+        transition="background 0.2s ease-in-out, color 0.2s ease-in-out, border 0.2s ease-in-out, box-shadow 0.2s ease-in-out"
+        _hover={{
+          backgroundColor: "rgba(255, 167, 36, 0.2)",
+          border: "0.5px solid rgba(255, 210, 0, 0.2)",
+          boxShadow: "0px 1px 6px rgba(255, 165, 0, 0.12)",
+        }}
+      >
+        {recording ? "Listening... click to stop" : "Speak"}
+      </Button>
     </motion.div>
   );
 };
