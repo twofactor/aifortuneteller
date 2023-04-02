@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import MicrophoneButton from "./MicrophoneButton";
 
-const Audio = ({ fetchChatGptResponse, setInnerTranscript }) => {
+const Audio = ({ fetchChatGptResponse }) => {
   const recognition = useRef(null);
 
   const [isRecording, setIsRecording] = useState(false);
@@ -45,7 +45,6 @@ const Audio = ({ fetchChatGptResponse, setInnerTranscript }) => {
           recognition.current.stop();
           setIsRecording(false);
           // document.getElementById("output").innerHTML = text;
-          setInnerTranscript(null);
           fetchChatGptResponse(text)
             .then((response) => {
               console.log("yeah we got it", response);
@@ -57,7 +56,6 @@ const Audio = ({ fetchChatGptResponse, setInnerTranscript }) => {
         } else {
           interimTranscript += event.results[i][0].transcript;
           // document.getElementById("output").innerHTML = interimTranscript;
-          setInnerTranscript(interimTranscript);
         }
       }
     };

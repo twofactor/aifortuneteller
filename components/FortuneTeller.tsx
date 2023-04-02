@@ -11,6 +11,15 @@ import {
 import { useState, useRef, useEffect, useCallback } from "react";
 import Chat from "../components/Chat";
 
+import Audio from "../components/Audio";
+
+import { Space_Mono } from "next/font/google";
+
+const spacemono = Space_Mono({
+  weight: "400",
+  subsets: ["latin"],
+});
+
 interface Message {
   id: number;
   role: "user" | "assistant" | "system";
@@ -90,7 +99,7 @@ const FortuneTeller = () => {
   };
 
   return (
-    <Tabs variant="unstyled">
+    <Tabs variant="unstyled" className={spacemono.className}>
       <TabList>
         <Tab
           width="50%"
@@ -141,7 +150,12 @@ const FortuneTeller = () => {
         border="0.5px solid rgba(255, 194, 102, 0.2)"
         boxShadow="0px 1px 6px rgba(255, 165, 0, 0.12)"
       >
-        <TabPanel>
+        <TabPanel
+          display="flex"
+          flexDirection={"column"}
+          alignItems="center"
+          justifyContent="center"
+        >
           <Button
             backgroundColor="rgba(255, 167, 36, 0.1)"
             border="0.5px solid rgba(255, 210, 0, 0.1)"
@@ -153,8 +167,9 @@ const FortuneTeller = () => {
           >
             Speak
           </Button>
+          <Audio fetchChatGptResponse={fetchChatGptResponse} />
         </TabPanel>
-        <TabPanel>
+        <TabPanel maxHeight={"100%"}>
           <Chat messages={messages} addMessage={addMessage} />
         </TabPanel>
       </TabPanels>

@@ -7,27 +7,48 @@ import SecondaryCard from "../components/@UI/SecondaryCard";
 
 import FortuneTeller from "../components/FortuneTeller";
 
+import { Space_Mono } from "next/font/google";
+
+const spacemono = Space_Mono({
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export default function Home() {
   return (
     <div>
       <Head>
         <title>Home</title>
       </Head>
-      <Flex backgroundColor="black" minHeight="100vh">
+      <Flex
+        backgroundColor="black"
+        height="100vh"
+        boxSizing="border-box"
+        padding="8px"
+        className={spacemono.className}
+      >
         <Flex
-          maxWidth="320px"
+          width={["100vw", "100vw", "360px", "360px"]}
           flexDirection="column"
           gap="8px"
           margin="auto"
-          marginTop={["8px", "16px", "32px", "32px"]}
+          boxSizing="border-box"
+          padding={["8px", "16px", "0px", "0px"]}
+          height="100%"
         >
-          <PrimaryCard padding="12px" width="100%">
+          <PrimaryCard
+            padding="12px"
+            width="100%"
+            textAlign={"center"}
+            alignItems="center"
+            justifyContent="center"
+          >
             <Text
               color={"#FFC266"}
               textShadow="0px 0px 3px rgba(255, 167, 36, 0.5)"
               fontSize="3xl"
             >
-              AI Fortune Teller
+              Fortune Teller
             </Text>
           </PrimaryCard>
           <SecondaryCard
