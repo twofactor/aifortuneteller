@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import Chat from "../components/Chat";
+import useSound from "use-sound";
 
 import Audio from "../components/Audio";
 
