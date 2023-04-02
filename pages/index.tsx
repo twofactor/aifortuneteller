@@ -18,7 +18,8 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Home</title>
+        <title>Fortune Teller</title>
+        <link rel="icon" type="image/png" href="kirbyfortune.png"></link>
       </Head>
       <Flex
         backgroundColor="black"
