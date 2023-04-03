@@ -21,8 +21,6 @@ async function handler(req, res) {
     return res.status(response.status).json({ message: "API request failed" });
   }
 
-  console.log(requestBody);
-
   const response = await fetch(apiUrl, {
     method: "POST",
     headers: {

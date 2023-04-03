@@ -95,7 +95,7 @@ export default function Chat({
     if (messages[messages.length - 1].role === "assistant") {
       playCollapse();
     }
-  }, [messages]);
+  }, [messages, playCollapse]);
 
   function addMessageThem() {
     let newId = messages.length
@@ -117,6 +117,7 @@ export default function Chat({
 
   function handleKeyPress(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && inputValue) {
+      e.preventDefault(); // Prevents the default behavior of adding a newline
       sendMessage();
     }
   }
@@ -145,6 +146,21 @@ export default function Chat({
             // p="8px"
             paddingBottom="16px"
             boxSizing="border-box"
+            css={{
+              "&::-webkit-scrollbar": {
+                backgroundColor: "transparent",
+                width: "0px",
+              },
+              "&::-webkit-scrollbar-track": {
+                width: "0px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                // background: "blue",
+                color: "blue",
+                borderRadius: "0px",
+                width: "3px",
+              },
+            }}
           >
             {/* {inputValue ? (
               <motion.div
